@@ -110,6 +110,18 @@ function filter(tag) {
   });
 }
 
+function toasty(message, cls) {
+  const toastLiveExample = document.getElementById('liveToast');
+  if (cls == "error") {
+    toastLiveExample.className ="toast text-bg-danger";
+  } else {
+    toastLiveExample.className ="toast";
+  }
+  toastLiveExample.getElementsByClassName("toast-body")[0].innerText=message;
+  const toast = new bootstrap.Toast(toastLiveExample);
+  toast.show();
+}
+
 /**
  * Print the names and majors of students in a sample spreadsheet:
  * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
@@ -127,12 +139,12 @@ async function populate() {
       range: 'A2:C',
     });
   } catch (err) {
-    document.getElementById('message').innerText = err.message;
+    toasty(err.message, "error");
     return;
   }
   const range = response.result;
   if (!range || !range.values || range.values.length == 0) {
-    document.getElementById('message').innerText = 'No values found.';
+    toasty("No values found.", "error");
     return;
   }
 
@@ -148,12 +160,13 @@ async function populate() {
   const tagContainer = document.getElementById('tags');
   tags.forEach(t=> {
     const button = document.createElement('button');
-    button.setAttribute("class", "btn btn-primary");
+    button.setAttribute("class", "btn btn btn-outline-primary");
     button.innerText = t;
     button.onclick = async() => {filter(t)};
     tagContainer.appendChild(button);
   });
   const par = document.getElementById('content');
+
   arr.forEach(o => {
     const button = document.createElement('button');
     button.innerText = o.title;
@@ -161,6 +174,7 @@ async function populate() {
     button.setAttribute("x-tags", o.tags.join(","));
     button.onclick = async () => {
       await navigator.clipboard.writeText(o.content);
+      toasty(`Copied ${o.title}`, "");
     };
     par.appendChild(button);
   });
