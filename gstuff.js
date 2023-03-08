@@ -46,6 +46,11 @@ window.onload = () => {
   });
   gisInited = true;
   maybeEnableButtons();
+
+  const sheetId = getSheet();
+  document.getElementById('sheet').value = sheetId;
+  document.getElementById('sheetShow').style.display = (sheetId) ? '' : 'none'; 
+
 }
 /**
  * Enables user interaction after all libraries are loaded.
@@ -122,6 +127,13 @@ function toasty(message, cls) {
   toast.show();
 }
 
+function getSheet() {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+  return params.sheet;
+}
+
 /**
  * Print the names and majors of students in a sample spreadsheet:
  * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
@@ -130,10 +142,7 @@ async function populate() {
   let response;
   try {
 
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-    const spreadsheetId = params.sheet;
+    const spreadsheetId = getSheet();
     response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
       range: 'A2:C',
