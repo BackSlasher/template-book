@@ -127,7 +127,7 @@
           const spreadsheetId = params.sheet;
           response = await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
-            range: 'A2:B',
+            range: 'A2:C',
           });
         } catch (err) {
           document.getElementById('message').innerText = err.message;
@@ -142,7 +142,8 @@
         const arr = range.values.map(
           row => ({
             title: row[0],
-            content: row[1],
+            tag: row[1],
+            content: row[2],
           })
         );
         const par = document.getElementById('content');
