@@ -84,10 +84,18 @@
           if (resp.error !== undefined) {
             throw (resp);
           }
+          localStorage.setItem('storedToken', JSON.stringify(gapi.client.getToken()));
           document.getElementById('signout_button').style.visibility = 'visible';
           document.getElementById('authorize_button').innerText = 'Refresh';
           await listMajors();
         };
+
+        if (gapi.client.getToken() === null) {
+          const storedToken = localStorage.getItem('storedToken');
+          if (storedToken != null) {
+            gapi.client.setToken(JSON.parse(storedToken));
+          }
+        }
 
         if (gapi.client.getToken() === null) {
           // Prompt the user to select a Google Account and ask for consent to share their data
