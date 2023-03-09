@@ -25,6 +25,15 @@ async function initializeGapiClient() {
         apiKey: API_KEY,
         discoveryDocs: [DISCOVERY_DOC],
     });
+    if (gapi.client.getToken() === null) {
+        const storedToken = localStorage.getItem('storedToken');
+        if (storedToken != null) {
+            gapi.client.setToken({
+                access_token: storedToken
+            });
+            await signedIn();
+        }
+    }
     gapiInited = true;
     maybeEnableButtons();
 }
@@ -61,6 +70,13 @@ function maybeEnableButtons() {
     }
 }
 
+async function signedIn() {
+    localStorage.setItem('storedToken', gapi.client.getToken().access_token);
+    document.getElementById('signout_button').style.visibility = 'visible';
+    document.getElementById('authorize_button').innerText = 'Refresh';
+    await populate();
+}
+
 /**
  *  Sign in the user upon button click.
  */
@@ -69,18 +85,8 @@ function handleAuthClick() {
         if (resp.error !== undefined) {
             throw (resp);
         }
-        localStorage.setItem('storedToken', JSON.stringify(gapi.client.getToken()));
-        document.getElementById('signout_button').style.visibility = 'visible';
-        document.getElementById('authorize_button').innerText = 'Refresh';
-        await populate();
+        await signedIn();
     };
-
-    if (gapi.client.getToken() === null) {
-        const storedToken = localStorage.getItem('storedToken');
-        if (storedToken != null) {
-            gapi.client.setToken(JSON.parse(storedToken));
-        }
-    }
 
     if (gapi.client.getToken() === null) {
         // Prompt the user to select a Google Account and ask for consent to share their data
@@ -107,6 +113,7 @@ function handleSignoutClick() {
         document.getElementById('content').innerText = '';
         document.getElementById('authorize_button').innerText = 'Authorize';
         document.getElementById('signout_button').style.visibility = 'hidden';
+        localStorage.removeItem('storedToken');
     }
 }
 
