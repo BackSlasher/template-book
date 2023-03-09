@@ -6,7 +6,7 @@
 const CLIENT_ID = '512510391570-r9pbvetuacq3f0i8f4v40etei4ps4qv0.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyASI4FABDCawBkChmrx-eNGjhxb9OPx5a8';
 const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/drive.file';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 let tokenClient;
 let gapiInited = false;
@@ -61,6 +61,7 @@ function showPicker() {
         .addView(google.picker.ViewId.SPREADSHEETS)
         .setOAuthToken(gapi.client.getToken().access_token)
         .setDeveloperKey(API_KEY)
+        .setAppId("512510391570")
         .setCallback(pickerCallback)
         .build();
     picker.setVisible(true);
