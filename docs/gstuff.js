@@ -6,7 +6,7 @@
 const CLIENT_ID = '512510391570-r9pbvetuacq3f0i8f4v40etei4ps4qv0.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyASI4FABDCawBkChmrx-eNGjhxb9OPx5a8';
 const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/drive.file';
 
 let tokenClient;
 let gapiInited = false;
@@ -39,11 +39,42 @@ async function initializeGapiClient() {
 }
 
 
+
+function onPickerApiLoad() {
+    pickerInited = true;
+}
+
+function pickerCallback(data) {
+    if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+        const doc = data[google.picker.Response.DOCUMENTS][0];
+        const url = doc[google.picker.Document.URL];
+        const sheetId = doc.id;
+        toasty(url, `aaaa ${doc.id}`);
+        document.getElementById('sheet').value = sheetId;
+        document.getElementById('pickerForm').submit();
+    }
+}
+
+function showPicker() {
+    // TODO(developer): Replace with your API key
+    const picker = new google.picker.PickerBuilder()
+        .addView(google.picker.ViewId.SPREADSHEETS)
+        .setOAuthToken(gapi.client.getToken().access_token)
+        .setDeveloperKey(API_KEY)
+        .setCallback(pickerCallback)
+        .build();
+    picker.setVisible(true);
+}
+
+
+
+
 window.onload = () => {
     /**
      * Callback after api.js is loaded.
      */
     gapi.load('client', initializeGapiClient);
+    gapi.load('picker', onPickerApiLoad);
 
     /**
      * Callback after Google Identity Services are loaded.
@@ -151,18 +182,30 @@ function getSheet() {
  */
 async function populate() {
     let response;
+    let title;
+    let spreadsheetUrl;
     try {
-
         const spreadsheetId = getSheet();
+        if (!spreadsheetId) {
+            return;
+        }
         response = await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
             range: 'A2:C',
         });
+        const response2 = await gapi.client.sheets.spreadsheets.get({
+            spreadsheetId: spreadsheetId
+        });
+        spreadsheetUrl = response2.result.spreadsheetUrl;
+        title = response2.result.properties.title;
     } catch (err) {
         toasty(err.message, "error");
         return;
     }
+    document.getElementById('spreadSheetTitle').innerText = title;
+    document.getElementById('spreadSheetTitle').href = spreadsheetUrl;
     const range = response.result;
+    console.log(response.result);
     if (!range || !range.values || range.values.length == 0) {
         toasty("No values found.", "error");
         return;
