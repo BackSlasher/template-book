@@ -4,7 +4,7 @@
 /* exported handleSignoutClick */
 
 const CLIENT_ID = '512510391570-r9pbvetuacq3f0i8f4v40etei4ps4qv0.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyAv5bn2I_gWY9XlULc4_WX0H9uL7kMUTgs';
+const API_KEY = 'AIzaSyASI4FABDCawBkChmrx-eNGjhxb9OPx5a8';
 const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 
