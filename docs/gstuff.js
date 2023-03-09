@@ -88,6 +88,7 @@ window.onload = () => {
     gisInited = true;
     maybeEnableButtons();
 
+
     const sheetId = getSheet();
     document.getElementById('sheet').value = sheetId;
     document.getElementById('sheetShow').style.display = (sheetId) ? '' : 'none';
@@ -99,6 +100,17 @@ window.onload = () => {
 function maybeEnableButtons() {
     if (gapiInited && gisInited) {
         document.getElementById('authorize_button').style.visibility = 'visible';
+    }
+
+    const isLoggedIn = !!(gapi.client.getToken());
+    console.log("aaaa", isLoggedIn);
+
+    if (!isLoggedIn) {
+        document.getElementById('sheetShow').style.display = 'none';
+        document.getElementById('sheetSelect').style.display = 'none';
+    } else {
+        document.getElementById('sheetShow').style.display = '';
+        document.getElementById('sheetSelect').style.display = '';
     }
 }
 

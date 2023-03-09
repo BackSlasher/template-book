@@ -17,10 +17,17 @@
     <main class="container" role="main">
         <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Authentication</h4>
+            </div>
+            <div class="card-body">
                 <div id="user">
-                    <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
-                    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+                    <button class="btn btn-primary mb-3" id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+                    <button class="btn btn-primary mb-3" id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
                 </div>
+            </div>
+        </div>
+        <div class="card mb-4 rounded-3 shadow-sm" id="sheetSelect" style="display:none">
+            <div class="card-header py-3">
                 <h4 class="my-0 fw-normal">Google Sheet ID</h4>
             </div>
             <div class="card-body">
@@ -31,7 +38,7 @@
                 <h4><a id="spreadSheetTitle" href="#" target="_blank"></a></h4>
             </div>
         </div>
-        <div class="card mb-4 rounded-3 shadow-sm" id="sheetShow">
+        <div class="card mb-4 rounded-3 shadow-sm" id="sheetShow" style="display:none">
             <div class="card-header py-3">
             </div>
             <div class="card-body">
