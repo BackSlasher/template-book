@@ -4,4 +4,4 @@ serve:
 	cd docs && python -m http.server
 
 pretty:
-	npx js-beautify -r docs/*
+	npx js-beautify -r docs/*.*
