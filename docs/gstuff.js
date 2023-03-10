@@ -116,6 +116,7 @@ async function signedIn() {
     localStorage.setItem('storedToken', gapi.client.getToken().access_token);
     document.getElementById('signout_button').style.visibility = 'visible';
     document.getElementById('authorize_button').innerText = 'Refresh';
+    await maybeEnableButtons();
     await populate();
 }
 
