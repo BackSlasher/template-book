@@ -18,32 +18,36 @@
     <main class="container" role="main">
         <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Authentication</h4>
+                <h4 class="my-0 fw-normal">1. Authorize Google Drive access</h4>
             </div>
             <div class="card-body">
                 <div id="user">
                     <button class="btn btn-primary mb-3" id="authorize_button" onclick="handleAuthClick()">Authorize</button>
                     <button class="btn btn-primary mb-3" id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
                 </div>
+                We can only access the spreadsheet you select with the picker below.
             </div>
         </div>
-        <div class="card mb-4 rounded-3 shadow-sm" id="sheetSelect" style="display:none">
+        <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
-                <h4 class="my-0 fw-normal">Google Sheet ID</h4>
+                <h4 class="my-0 fw-normal">2. Select a Google Sheet</h4>
             </div>
-            <div class="card-body">
+            <div id="sheetSelect" class="card-body" style="display:none">
                 <button class="btn btn-primary mb-3" onclick="showPicker()">Pick</button>
                 <form id="pickerForm" method="get" class="row g-3">
                     <input type="hidden" name="sheet" id="sheet">
                 </form>
                 <h4><a id="spreadSheetTitle" href="#" target="_blank"></a></h4>
+                Select a spreadsheet that contains your templates.<br />
+                Feel free to copy <a href="https://docs.google.com/spreadsheets/d/1HsNLZzC_80zi8ZNh4Ns8YSq42c6XPqFwKZ1nL7wuMFI/" target="_blank">this one</a> as an example.
             </div>
         </div>
-        <div class="card mb-4 rounded-3 shadow-sm" id="sheetShow" style="display:none">
+        <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">3. Select a template to copy</h4>
             </div>
-            <div class="card-body">
-                <div id="tags" class="border-bottom"></div>
+            <div class="card-body" id="sheetShow" style="display:none">
+                <div id="tags" class="border-bottom">Tags: </div>
                 <div id="content" class="d-grid gap-2"></div>
             </div>
         </div>

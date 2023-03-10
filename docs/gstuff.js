@@ -49,7 +49,6 @@ function pickerCallback(data) {
         const doc = data[google.picker.Response.DOCUMENTS][0];
         const url = doc[google.picker.Document.URL];
         const sheetId = doc.id;
-        toasty(url, `aaaa ${doc.id}`);
         document.getElementById('sheet').value = sheetId;
         document.getElementById('pickerForm').submit();
     }
@@ -86,7 +85,6 @@ window.onload = () => {
         callback: '', // defined later
     });
     gisInited = true;
-    maybeEnableButtons();
 
 
     const sheetId = getSheet();
@@ -103,14 +101,14 @@ function maybeEnableButtons() {
     }
 
     const isLoggedIn = !!(gapi.client.getToken());
-    console.log("aaaa", isLoggedIn);
 
-    if (!isLoggedIn) {
-        document.getElementById('sheetShow').style.display = 'none';
-        document.getElementById('sheetSelect').style.display = 'none';
-    } else {
-        document.getElementById('sheetShow').style.display = '';
+    document.getElementById('sheetSelect').style.display = 'none';
+    document.getElementById('sheetShow').style.display = 'none';
+    if (isLoggedIn) {
         document.getElementById('sheetSelect').style.display = '';
+        if (getSheet()) {
+            document.getElementById('sheetShow').style.display = '';
+        }
     }
 }
 
@@ -164,7 +162,7 @@ function handleSignoutClick() {
 function filter(tag) {
     const par = document.getElementById('content');
     par.childNodes.forEach(i => {
-        const tags = i.getAttribute("x-tags").split(",").filter(s => s.length);
+        const tags = i.getAttribute("x-tags").split(",").filter(s => s.length).map(s => s.trim());
         const shouldShow = (tag == "<None>" || tags.indexOf(tag) > -1);
         i.style.display = shouldShow ? '' : 'none';
     });
@@ -218,7 +216,6 @@ async function populate() {
     document.getElementById('spreadSheetTitle').innerText = title;
     document.getElementById('spreadSheetTitle').href = spreadsheetUrl;
     const range = response.result;
-    console.log(response.result);
     if (!range || !range.values || range.values.length == 0) {
         toasty("No values found.", "error");
         return;
@@ -227,11 +224,11 @@ async function populate() {
     const arr = range.values.map(
         row => ({
             title: row[0],
-            tags: row[1].split(",").filter(t => t.length > 0),
+            tags: row[1].split(",").filter(t => t.length).map(t => t.trim()),
             content: row[2],
         })
     );
-    const tags_array = arr.map(i => i.tags).flat()
+    const tags_array = arr.map(i => i.tags).flat();
     const tags = ["<None>", ...new Set(tags_array)];
     const tagContainer = document.getElementById('tags');
     tags.forEach(t => {
