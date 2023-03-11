@@ -107,6 +107,8 @@ async function refreshButtons() {
         document.getElementById('btnSignIn').style.display = 'none';
         // Show sheet box 
         document.getElementById('sheetBox').style.display = '';
+        // Hide guidelines
+        document.getElementById('guidelines').style.display = 'none';
         // populate sheet box
         await populate();
     } else {
@@ -116,14 +118,18 @@ async function refreshButtons() {
         document.getElementById('btnSignIn').style.display = '';
         // Hide sheet box
         document.getElementById('sheetBox').style.display = 'none';
+        // Show guidelines
+        document.getElementById('guidelines').style.display = '';
     }
 }
 
 async function populate() {
     const sheetId = getSheet();
     if (!sheetId) {
+        document.getElementById('sheetData').style.display = 'none';
         return;
     }
+    document.getElementById('sheetData').style.display = '';
     await Promise.all([
         populateTitle(sheetId),
         populateData(sheetId),
