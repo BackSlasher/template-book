@@ -126,6 +126,9 @@ async function maybeEnableButtons() {
         document.getElementById('sheetSelect').style.display = '';
         if (getSheet()) {
             document.getElementById('sheetShow').style.display = '';
+            document.getElementById('sheetSelect').classList.remove('show');
+            document.getElementById('authorizeDiv').classList.remove('show');
+            document.getElementById('demoDiv').classList.remove('show');
         }
     }
 }
