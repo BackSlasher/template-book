@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Template Book</title>
+    <meta charset="utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <style>
+        #tags>button {
+            margin: .25rem .125rem;
+        }
+
+    </style>
+</head>
+
+<body>
+    <main class="container" role="main">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="collapse" data-bs-target="#demoDiv">
+                    +
+                </button>
+                <h4 class="my-0 fw-normal float-left">Copy templates from a spreadsheet</h4>
+            </div>
+            <div id="demoDiv" class="card-body collapse show">
+                Store your quick responses in a Google Sheet, copy them easily to your clipboard to paste around.<br />
+                <img src="demo.svg" style="max-width:100%" />
+            </div>
+        </div>
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="collapse" data-bs-target="#authorizeDiv">
+                    +
+                </button>
+                <h4 class="my-0 fw-normal">1. Authorize Google Drive access</h4>
+            </div>
+            <div id="authorizeDiv" class="card-body collapse show">
+                <div id="user">
+                    <button class="btn btn-primary mb-3" id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+                    <button class="btn btn-primary mb-3" id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+                </div>
+                We can only access the spreadsheet you select with the picker below.
+            </div>
+        </div>
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="collapse" data-bs-target="#sheetSelect">
+                    +
+                </button>
+                <h4 class="my-0 fw-normal">2. Select a Google Sheet</h4>
+            </div>
+            <div id="sheetSelect" class="card-body collapse show" style="display:none">
+                <button class="btn btn-primary mb-3" onclick="showPicker()">Pick</button>
+                <form id="pickerForm" method="get" class="row g-3">
+                    <input type="hidden" name="sheet" id="sheet">
+                </form>
+                <h4><a id="spreadSheetTitle" href="#" target="_blank"></a></h4>
+                Select a spreadsheet that contains your templates.<br />
+                Feel free to copy <a href="https://docs.google.com/spreadsheets/d/1HsNLZzC_80zi8ZNh4Ns8YSq42c6XPqFwKZ1nL7wuMFI/" target="_blank">this one</a> as an example.
+            </div>
+        </div>
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">3. Select a template to copy</h4>
+            </div>
+            <div class="card-body" id="sheetShow" style="display:none">
+                <div id="tags" class="border-bottom">Tags: </div>
+                <div id="content" class="d-grid gap-2"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="gstuff.old.js"></script>
+</body>
+
+</html>
