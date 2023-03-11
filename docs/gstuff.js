@@ -15,6 +15,21 @@ let gisInited = false;
 document.getElementById('authorize_button').style.visibility = 'hidden';
 document.getElementById('signout_button').style.visibility = 'hidden';
 
+async function verifyToken() {
+    const storedToken = localStorage.getItem('storedToken');
+    if (!storedToken) {
+        return false;
+    }
+    const params = new URLSearchParams({
+        access_token: storedToken,
+    });
+    const req = new Request(
+        `https://www.googleapis.com/oauth2/v1/tokeninfo?${params.toString()}`,
+    );
+    const resp = await fetch(req);
+    const code = resp.status;
+    return code == "200"
+}
 
 /**
  * Callback after the API client is loaded. Loads the
@@ -31,11 +46,14 @@ async function initializeGapiClient() {
             gapi.client.setToken({
                 access_token: storedToken
             });
-            await signedIn();
+            const verified = await verifyToken();
+            if (verified) {
+                await signedIn();
+            }
         }
     }
     gapiInited = true;
-    maybeEnableButtons();
+    await maybeEnableButtons();
 }
 
 
@@ -95,12 +113,12 @@ window.onload = () => {
 /**
  * Enables user interaction after all libraries are loaded.
  */
-function maybeEnableButtons() {
+async function maybeEnableButtons() {
     if (gapiInited && gisInited) {
         document.getElementById('authorize_button').style.visibility = 'visible';
     }
 
-    const isLoggedIn = !!(gapi.client.getToken());
+    const isLoggedIn = await verifyToken();
 
     document.getElementById('sheetSelect').style.display = 'none';
     document.getElementById('sheetShow').style.display = 'none';
