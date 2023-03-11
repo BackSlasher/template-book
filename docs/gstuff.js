@@ -178,6 +178,8 @@ async function populateData(spreadsheetId) {
         button.innerText = o.title;
         button.setAttribute("class", "btn btn-primary");
         button.setAttribute("x-tags", o.tags.join(","));
+        button.setAttribute("data-bs-title", o.content);
+        new bootstrap.Tooltip(button);
         button.onclick = async () => {
             await navigator.clipboard.writeText(o.content);
             toasty(`Copied ${o.title}`, "");
