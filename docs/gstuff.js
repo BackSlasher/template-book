@@ -3,6 +3,8 @@ const API_KEY = 'AIzaSyASI4FABDCawBkChmrx-eNGjhxb9OPx5a8';
 const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
+import * as myCache from "./cache.js";
+
 // Need this externally, using `import "";` fails because of CORS
 // <script src="https://apis.google.com/js/api.js"></script> 
 // <script src="https://accounts.google.com/gsi/client"></script>
@@ -109,8 +111,21 @@ async function refreshButtons() {
         document.getElementById('sheetBox').style.display = '';
         // Hide guidelines
         document.getElementById('guidelines').style.display = 'none';
+        // Show pick sheet
+        document.getElementById('btnPicker').style.display = '';
         // populate sheet box
         await populate();
+    } else if (populateFromCache()) {
+        // Hide signout
+        document.getElementById('btnSignOut').style.display = 'none';
+        // Show signin
+        document.getElementById('btnSignIn').style.display = '';
+        // Show sheet box 
+        document.getElementById('sheetBox').style.display = '';
+        // Hide guidelines
+        document.getElementById('guidelines').style.display = 'none';
+        // Hide pick sheet
+        document.getElementById('btnPicker').style.display = 'none';
     } else {
         // Hide signout
         document.getElementById('btnSignOut').style.display = 'none';
@@ -121,6 +136,29 @@ async function refreshButtons() {
         // Show guidelines
         document.getElementById('guidelines').style.display = '';
     }
+}
+
+function populateFromCache() {
+    const sheetId = getSheet();
+    if (!sheetId) {
+        document.getElementById('sheetData').style.display = 'none';
+        return false;
+    }
+
+    // check if data exists in cache
+    if (!myCache.isItemExists(sheetId)) {
+        return false;
+    }
+
+    const {
+        title,
+        href
+    } = myCache.getTitle(sheetId);
+    htmlSetTitle(`${title} [FROM CACHE]`, href);
+
+    const arr = myCache.getBody(sheetId);
+    htmlSetData(arr);
+    return true;
 }
 
 async function populate() {
@@ -142,6 +180,14 @@ async function populateTitle(spreadsheetId) {
     });
     const spreadsheetUrl = response.result.spreadsheetUrl;
     const title = response.result.properties.title;
+
+    // update cache
+    myCache.setTitle(spreadsheetId, title, spreadsheetUrl);
+
+    htmlSetTitle(title, spreadsheetUrl);
+}
+
+async function htmlSetTitle(title, spreadsheetUrl) {
     document.getElementById('sheetName').innerText = title;
     document.getElementById('sheetName').href = spreadsheetUrl;
 }
@@ -164,6 +210,13 @@ async function populateData(spreadsheetId) {
         })
     );
 
+    // update cache
+    myCache.setBody(spreadsheetId, arr);
+
+    htmlSetData(arr);
+}
+
+function htmlSetData(arr) {
     const tags_array = arr.map(i => i.tags).flat();
     const tags = ["<Clear>", ...new Set(tags_array)];
     const tagContainer = document.getElementById('tags');
